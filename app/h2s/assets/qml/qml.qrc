@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>api/BizApi.qml</file>
+    </qresource>
+</RCC>
