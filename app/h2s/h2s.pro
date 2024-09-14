@@ -18,10 +18,21 @@ DESTDIR     = $$PRJDIR/bin
 
 TARGET = h2s
 
+HEADERS += \
+    src/utility/Bizcommand.h \
+    src/utility/Logger.h \
+    src/utility/Utility.h \
+    src/rule/PokerCard.h \
+    src/rule/PokerCards.h \
+    src/rule/Rule.h
+
 SOURCES += \
         src/main.cpp \
-        src/utility/bizcommand.cpp \
-        src/utility/utility.cpp
+        src/utility/Bizcommand.cpp \
+        src/utility/Utility.cpp \
+        src/rule/PokerCard.cpp \
+        src/rule/PokerCards.cpp \
+        src/rule/Rule.cpp
 
 RESOURCES += \
         assets/qml/qml.qrc \
@@ -40,7 +51,4 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-HEADERS += \
-    src/utility/bizcommand.h \
-    src/utility/logger.h \
-    src/utility/utility.h
+

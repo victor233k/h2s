@@ -13,11 +13,9 @@
 #include <QProcess>
 #include <QApplication>
 
-#include "src/utility/utility.h"
-#include "src/utility/logger.h"
-#include "src/utility/bizcommand.h"
-
-
+#include "src/utility/Utility.h"
+#include "src/utility/Logger.h"
+#include "src/utility/Bizcommand.h"
 
 
 int main(int argc, char *argv[])
@@ -42,7 +40,6 @@ int main(int argc, char *argv[])
 
     qInfo() << "Try setContextProperty";
     engine->rootContext()->setContextProperty("bizCommand", bizCommand);
-
 
 
     engine->load(QUrl(QStringLiteral("qrc:/main.qml")));
