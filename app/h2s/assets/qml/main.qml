@@ -7,9 +7,9 @@ Window {
     height: 480
     title: qsTr("Hello World")
 
-    Rectangle {
-        color: "red"
-        width: 100
-        height: 60
-    }
+//    Rectangle {
+//        color: "red"
+//        width: 100
+//        height: 60
+//    }
 }

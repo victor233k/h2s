@@ -19,20 +19,18 @@ DESTDIR     = $$PRJDIR/bin
 TARGET = h2s
 
 HEADERS += \
+    src/rule/Card.h \
+    src/rule/Poker.h \
     src/utility/Bizcommand.h \
     src/utility/Logger.h \
-    src/utility/Utility.h \
-    src/rule/PokerCard.h \
-    src/rule/PokerCards.h \
-    src/rule/Rule.h
+    src/utility/Utility.h
 
 SOURCES += \
         src/main.cpp \
+        src/rule/Card.cpp \
+        src/rule/Poker.cpp \
         src/utility/Bizcommand.cpp \
-        src/utility/Utility.cpp \
-        src/rule/PokerCard.cpp \
-        src/rule/PokerCards.cpp \
-        src/rule/Rule.cpp
+        src/utility/Utility.cpp
 
 RESOURCES += \
         assets/qml/qml.qrc \

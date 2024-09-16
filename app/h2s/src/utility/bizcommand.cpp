@@ -2,17 +2,20 @@
 
 #include <QDebug>
 
-#include "src/rule/PokerCards.h"
-#include "src/rule/Rule.h"
-//#include "src/rule/PokerCard.h"
-class PokerCard;
+#include "src/rule/Poker.h"
 
 BIZCommand::BIZCommand(QObject *parent) : QObject(parent)
 {
     qInfo() << "BIZCommand init";
-//    Rule rule;
-    PokerCards cards;
+
+    Poker cards;
     cards.shuffleCards();
 
+    auto list = cards.dealCard(7);
+
+    for(int i = 0; i < list.size(); i++)
+    {
+        qInfo() << i << "--"  << list.at(i)->getCardString();
+    }
 
 }
