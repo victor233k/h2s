@@ -23,6 +23,7 @@ HEADERS += \
     src/rule/Poker.h \
     src/utility/Bizcommand.h \
     src/utility/Logger.h \
+    src/utility/Test.h \
     src/utility/Utility.h
 
 SOURCES += \
@@ -30,6 +31,7 @@ SOURCES += \
         src/rule/Card.cpp \
         src/rule/Poker.cpp \
         src/utility/Bizcommand.cpp \
+        src/utility/Test.cpp \
         src/utility/Utility.cpp
 
 RESOURCES += \

@@ -31,9 +31,9 @@ Poker::~Poker()
 void Poker::shuffleCards()
 {
     initRandomList();
-    qInfo() << "begin *** " << m_randomList;
+//    qInfo() << "begin *** " << m_randomList;
     std::shuffle(m_randomList.begin(), m_randomList.end(), QRandomGeneratorAdapter());
-    qInfo() << "end = " << m_randomList;
+//    qInfo() << "end = " << m_randomList;
 }
 
 QVector<Card *> Poker::dealCard(int num)
