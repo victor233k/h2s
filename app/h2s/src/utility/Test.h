@@ -10,6 +10,9 @@ public:
     explicit Test(QObject *parent = nullptr);
 
     void testDealCard();
+    void testFindBestHand();
+
+    void testIsStraightFlush();
 signals:
 
 };

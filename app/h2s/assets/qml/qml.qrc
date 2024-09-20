@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>api/BizApi.qml</file>
+        <file>PokerTable.qml</file>
+        <file>Card.qml</file>
     </qresource>
 </RCC>

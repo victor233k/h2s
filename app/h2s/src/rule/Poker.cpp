@@ -3,7 +3,7 @@
 #include <QRandomGenerator>
 
 struct QRandomGeneratorAdapter {
-    using result_type = quint32; // 定义 result_type
+    using result_type = quint32; // define result_type
 
     result_type operator()() {
         return QRandomGenerator::global()->generate();
@@ -31,9 +31,7 @@ Poker::~Poker()
 void Poker::shuffleCards()
 {
     initRandomList();
-//    qInfo() << "begin *** " << m_randomList;
     std::shuffle(m_randomList.begin(), m_randomList.end(), QRandomGeneratorAdapter());
-//    qInfo() << "end = " << m_randomList;
 }
 
 QVector<Card *> Poker::dealCard(int num)
@@ -51,6 +49,124 @@ QVector<Card *> Poker::dealCard(int num)
     }
     return list;
 }
+
+QVector<Card *> Poker::findBestHand(const QVector<Card*>& list, QVector<Card*> &outlist)
+{
+    QVector<Card *> bestHand;
+    QVector<Card *> sortList = list;
+    qInfo() << printList(list);
+    std::sort(sortList.begin(), sortList.end(), [](const Card *a, const Card *b) {
+        return *a > *b;
+    });
+    qInfo() << printList(sortList);
+
+
+    if(isStraightFlush(sortList, outlist))
+    {
+        return outlist;
+    }
+
+
+    return bestHand;
+}
+
+bool Poker::isStraightFlush(const QVector<Card*>& list, QVector<Card*> &outlist)
+{
+    bool haveSuit = false;
+    QString suit;
+    QMap<QString, int> suitCount;
+    QVector<Card *> sortList = list;
+
+    std::sort(sortList.begin(), sortList.end(), [](const Card *a, const Card *b) {
+        return *a > *b;
+    });
+
+    for(int i = 0; i < sortList.size(); i++)
+    {
+        suitCount[sortList.at(i)->getSuit()]++;
+        if(suitCount[sortList.at(i)->getSuit()] >= 5)
+        {
+            suit = sortList.at(i)->getSuit();
+            haveSuit = true;
+        }
+    }
+    if(!haveSuit)
+    {
+        return false;
+    }
+
+    QVector<Card *> suitList;
+    for(int i = 0; i < sortList.size(); i++)
+    {
+        if(sortList.at(i)->getSuit() == suit)
+        {
+            suitList.append(sortList.at(i));
+        }
+    }
+
+
+    if(isStraight(suitList, outlist))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool Poker::isStraight(const QVector<Card*>& list, QVector<Card*> &outlist)
+{
+    if(list.empty())
+    {
+        return false;
+    }
+
+    int count = 0;
+    QVector<Card*> tmpList = list;
+    std::sort(tmpList.begin(), tmpList.end(), [](const Card *a, const Card *b) {
+        return *a > *b;
+    });
+
+    qInfo() << printList(tmpList);
+
+    if(tmpList.at(0)->getRankValue() == Card::getRankValue("A"))
+    {
+        tmpList.append(tmpList.at(0));
+    }
+    qInfo() << printList(tmpList);
+
+    for(int i = 0; i < tmpList.size(); i++)
+    {
+        if(i > 0) {
+            if(tmpList.at(i-1)->getRankValue() == (tmpList.at(i)->getRankValue() + 1) ||
+                    (tmpList.at(i-1)->getRankValue() == Card::getRankValue("2") &&
+                     tmpList.at(0)->getRankValue() ==  Card::getRankValue("A")) )
+            {
+                outlist.append(tmpList.at(i-1));
+                count++;
+                if(count == 4)
+                {
+                    outlist.append(tmpList.at(i));
+                    return true;
+                }
+            } else {
+                count = 0;
+                outlist.clear();
+            }
+        }
+    }
+
+    return false;
+}
+
+QString Poker::printList(const QVector<Card *> &list, QString str)
+{
+    for(int i = 0; i < list.size(); i++)
+    {
+        str.append(list.at(i)->getCardString()).append(" ");
+    }
+    return str;
+}
+
 
 void Poker::initCardList()
 {

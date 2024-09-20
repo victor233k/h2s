@@ -3,13 +3,15 @@ import QtQuick.Window 2.12
 
 Window {
     visible: true
-    width: 640
-    height: 480
+    width: 1600
+    height: 720
     title: qsTr("Hello World")
 
-//    Rectangle {
-//        color: "red"
-//        width: 100
-//        height: 60
+//    PokerTable {
+//        anchors.fill: parent
+
 //    }
+
+
+
 }
