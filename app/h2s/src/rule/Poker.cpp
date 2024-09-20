@@ -77,9 +77,7 @@ bool Poker::isStraightFlush(const QVector<Card*>& list, QVector<Card*> &outlist)
     QMap<QString, int> suitCount;
     QVector<Card *> sortList = list;
 
-    std::sort(sortList.begin(), sortList.end(), [](const Card *a, const Card *b) {
-        return *a > *b;
-    });
+    shortCardList(sortList);
 
     for(int i = 0; i < sortList.size(); i++)
     {
@@ -104,10 +102,107 @@ bool Poker::isStraightFlush(const QVector<Card*>& list, QVector<Card*> &outlist)
         }
     }
 
-
     if(isStraight(suitList, outlist))
     {
         return true;
+    }
+
+    return false;
+}
+
+bool Poker::isFourOfAKind(const QVector<Card *> &list, QVector<Card *> &outlist)
+{
+    QVector<Card *> sortList = list;
+    shortCardList(sortList);
+    int count = 0;
+
+    for(int i = 0; i < sortList.size(); i++)
+    {
+        if(i > 0) {
+            int prevValue = sortList.at(i-1)->getRankValue();
+            int currentValue = sortList.at(i)->getRankValue();
+
+            if(prevValue == currentValue)
+            {
+                outlist.append(sortList.at(i-1));
+                count++;
+                if(count == 3)
+                {
+                     outlist.append(sortList.at(i));
+
+                     if(sortList.at(0)->getRankValue() != sortList.at(i-1)->getRankValue())
+                     {
+                         //A K K K K 3 2
+                         outlist.append(sortList.at(0));
+                     } else {
+                         //K K K K Q 3 2
+                         outlist.append(sortList.at(4));
+                     }
+                     return true;
+                }
+            } else {
+                count= 0;
+                outlist.clear();
+            }
+        }
+    }
+
+    return false;
+}
+
+bool Poker::isFullHouse(const QVector<Card *> &list, QVector<Card *> &outlist)
+{
+    QVector<Card *> sortList = list;
+    shortCardList(sortList);
+    int count = 0;
+    int TreeOfKindValue;
+    bool haveThreeOfAKind = false;
+
+    //find best TreeOfKind
+    for(int i = 0; i < sortList.size(); i++)
+    {
+        if(i > 0) {
+            int prevValue = sortList.at(i-1)->getRankValue();
+            int currentValue = sortList.at(i)->getRankValue();
+
+            if(prevValue == currentValue)
+            {
+                outlist.append(sortList.at(i-1));
+                count++;
+                if(count == 2)
+                {
+                     outlist.append(sortList.at(i));
+                     TreeOfKindValue = currentValue;
+                     haveThreeOfAKind = true;
+                     break;
+                }
+            } else {
+                count= 0;
+                outlist.clear();
+            }
+        }
+    }
+    if(haveThreeOfAKind)
+    {
+        //find one pair
+        for(int i = 0; i < sortList.size(); i++)
+        {
+            if(i > 0) {
+                int prevValue = sortList.at(i-1)->getRankValue();
+                int currentValue = sortList.at(i)->getRankValue();
+
+                if(currentValue == TreeOfKindValue)
+                    continue;
+
+                if(prevValue == currentValue)
+                {
+                    outlist.append(sortList.at(i-1));
+                    outlist.append(sortList.at(i));
+                    return true;
+                }
+
+            }
+        }
     }
 
     return false;
@@ -121,31 +216,27 @@ bool Poker::isStraight(const QVector<Card*>& list, QVector<Card*> &outlist)
     }
 
     int count = 0;
-    QVector<Card*> tmpList = list;
-    std::sort(tmpList.begin(), tmpList.end(), [](const Card *a, const Card *b) {
-        return *a > *b;
-    });
+    QVector<Card*> sortList = list;
 
-    qInfo() << printList(tmpList);
+    shortCardList(sortList);
 
-    if(tmpList.at(0)->getRankValue() == Card::getRankValue("A"))
+    if(sortList.at(0)->getRankValue() == Card::getRankValue("A"))
     {
-        tmpList.append(tmpList.at(0));
+        sortList.append(sortList.at(0));
     }
-    qInfo() << printList(tmpList);
 
-    for(int i = 0; i < tmpList.size(); i++)
+    for(int i = 0; i < sortList.size(); i++)
     {
         if(i > 0) {
-            if(tmpList.at(i-1)->getRankValue() == (tmpList.at(i)->getRankValue() + 1) ||
-                    (tmpList.at(i-1)->getRankValue() == Card::getRankValue("2") &&
-                     tmpList.at(0)->getRankValue() ==  Card::getRankValue("A")) )
+            if(sortList.at(i-1)->getRankValue() == (sortList.at(i)->getRankValue() + 1) ||
+                    (sortList.at(i-1)->getRankValue() == Card::getRankValue("2") &&
+                     sortList.at(0)->getRankValue() ==  Card::getRankValue("A")) )
             {
-                outlist.append(tmpList.at(i-1));
+                outlist.append(sortList.at(i-1));
                 count++;
                 if(count == 4)
                 {
-                    outlist.append(tmpList.at(i));
+                    outlist.append(sortList.at(i));
                     return true;
                 }
             } else {
@@ -156,6 +247,13 @@ bool Poker::isStraight(const QVector<Card*>& list, QVector<Card*> &outlist)
     }
 
     return false;
+}
+
+void Poker::shortCardList(QVector<Card *> &list)
+{
+    std::sort(list.begin(), list.end(), [](const Card *a, const Card *b) {
+        return *a > *b;
+    });
 }
 
 QString Poker::printList(const QVector<Card *> &list, QString str)

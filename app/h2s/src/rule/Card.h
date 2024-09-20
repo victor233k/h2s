@@ -52,7 +52,7 @@ public:
         assert(map.contains(val));
         return map.value(val);
     }
-private:
+
     static int getSuitIndex(QString val) {
         val = val.toUpper();
         static const QMap<QString, int> map = {

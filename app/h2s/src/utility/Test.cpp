@@ -2,80 +2,178 @@
 
 #include <QDebug>
 
-#include "src/rule/Poker.h"
-
-
 
 Test::Test(QObject *parent) : QObject(parent)
 {
-//    testDealCard();
+    initCardList();
+
+    testDealCard();
     testIsStraightFlush();
-//    testFindBestHand();
+    testIsFourOfAKind();
+    //    testFindBestHand();
+}
+
+Test::~Test()
+{
+    clearCardList();
 }
 
 void Test::testDealCard()
 {
+    qInfo() << __func__;
     Poker cards;
     cards.shuffleCards();
-
     auto list = cards.dealCard(7);
-
-    qInfo() << cards.printList(list, "test dealCard : ");
+    qInfo() << __func__ << Poker::printList(list);
 }
 
 void Test::testFindBestHand()
 {
+    qInfo() << __func__;
     Poker cards;
     cards.shuffleCards();
-
     auto list = cards.dealCard(7);
     QVector<Card*> bestHand;
     cards.findBestHand(list, bestHand);
-
-    qInfo() << cards.printList(bestHand, "test best hand is : ");
+    qInfo() << __func__ << Poker::printList(list,    "in  list : ");
+    qInfo() << __func__ << Poker::printList(bestHand,"out list : ");
 }
 
 void Test::testIsStraightFlush()
 {
-    Poker cards;
-
-    QVector<Card*> sfList, outlist;
-    Card c0(0),c1(1),c2(2),c3(3),c4(4),c5(5),c6(6),c7(7),c8(8),c12(12);
-    Card d2("DJ"),d3("D3"),d4("DT"),d5("D5"),s2("DK"),da("DA"),h3("DQ");
-    sfList.append(&d2);
-    sfList.append(&d3);
-    sfList.append(&d4);
-    sfList.append(&d5);
-    sfList.append(&s2);
-    sfList.append(&da);
-    sfList.append(&h3);
-
-    qInfo() << " ";
-    qInfo() << "test  StraightFlush" << cards.printList(sfList);
-    if(cards.isStraightFlush(sfList,outlist))
-    {
-        qInfo() << cards.printList(sfList);
-        qInfo() << "StraightFlush : " << cards.printList(outlist);
-    }
-    qInfo() << " ";
+    qInfo() << __func__;
+    QVector<Card*> list0;
+    QVector<Card*> outlist;
+    list0 = getFourOfAKindList();
+    Poker::isStraightFlush(list0, outlist);
+    qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
+    qInfo() << __func__ << Poker::printList(outlist,"out list : ");
 
     outlist.clear();
-    sfList.clear();
 
-    sfList.append(&c0);
-    sfList.append(&c1);
-    sfList.append(&c2);
-    sfList.append(&c3);
-    sfList.append(&c5);
-    sfList.append(&c6);
-    sfList.append(&c12);
+    list0 = getStraightFlushList();
+    Poker::isStraightFlush(list0, outlist);
+    qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
+    qInfo() << __func__ << Poker::printList(outlist,"out list : ");
+}
 
-    qInfo() << " ";
-    qInfo() << "test StraightFlush 54321" << cards.printList(sfList);
-    if(cards.isStraightFlush(sfList,outlist))
+void Test::testIsFourOfAKind()
+{
+    qInfo() << __func__;
+    QVector<Card*> list0;
+    QVector<Card*> outlist;
+
+    list0 = getStraightFlushList();
+    Poker::isFourOfAKind(list0, outlist);
+    qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
+    qInfo() << __func__ << Poker::printList(outlist,"out list : ");
+
+    outlist.clear();
+
+    list0 = getFourOfAKindList();
+    Poker::isFourOfAKind(list0, outlist);
+    qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
+    qInfo() << __func__ << Poker::printList(outlist,"out list : ");
+}
+
+void Test::testIsFullHouse()
+{
+    qInfo() << __func__;
+    QVector<Card*> list0;
+    QVector<Card*> outlist;
+    list0 = getTwoPairsList();
+    Poker::isFullHouse(list0, outlist);
+    qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
+    qInfo() << __func__ << Poker::printList(outlist,"out list : ");
+
+    outlist.clear();
+
+    list0 = getFullHouseList();
+    Poker::isFullHouse(list0, outlist);
+    qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
+    qInfo() << __func__ << Poker::printList(outlist,"out list : ");
+}
+
+void Test::initCardList()
+{
+    m_list = new QVector<Card*>;
+    for(int i = 0; i < CARD_MAX_NUM; i++)
     {
-        qInfo() << cards.printList(sfList);
-        qInfo() << "StraightFlush : " << cards.printList(outlist);
+        Card * card = new Card(i);
+        m_list->append(card);
     }
-    qInfo() << " ";
+}
+
+QVector<Card *> Test::getCustomList(QString val)
+{
+    QVector<Card *> list;
+
+    for(int i = 0; i < val.size() - 1; i = i + 2)
+    {
+        QString str;
+        str.append(val.at(i)).append(val.at(i+1));
+        Card * card = m_list->at(Card::getIdByCardString(str));
+        list.append(card);
+    }
+    return list;
+}
+
+//TODO:Randomly provide a matching list
+QVector<Card *> Test::getStraightFlushList()
+{
+    return getCustomList("DJD3DTD5DKDADQ");
+}
+
+QVector<Card *> Test::getFourOfAKindList()
+{
+    return getCustomList("HKHQH3CQCADQSQ");
+}
+
+QVector<Card *> Test::getFullHouseList()
+{
+    return getCustomList("HKHQH3CQCADQS3");
+}
+
+QVector<Card *> Test::getFlushList()
+{
+    return getCustomList("SJH3STS5SKCASQ");
+}
+
+QVector<Card *> Test::getStraightList()
+{
+    return getCustomList("SJD3DTD5SKCAHQ");
+}
+
+QVector<Card *> Test::getThreeOfAKindList()
+{
+    return getCustomList("SJD3DTDJSKCJHQ");
+}
+
+QVector<Card *> Test::getTwoPairsList()
+{
+    return getCustomList("SJD3DTDKSKCJHQ");
+}
+
+QVector<Card *> Test::getOnePairList()
+{
+    return getCustomList("SJD3DTDKSKC2HQ");
+}
+
+void Test::clearCardList()
+{
+    if(m_list == nullptr)
+    {
+        qWarning() << "m_list is nullptr";
+        return;
+    }
+    for(int i = 0; i < m_list->size(); i++)
+    {
+        Card* card = m_list->at(i);
+        if(card != nullptr)
+        {
+            delete card;
+        }
+    }
+    m_list->clear();
+    delete m_list;
 }

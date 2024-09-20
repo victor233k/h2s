@@ -29,20 +29,21 @@ public:
     void shuffleCards();
     QVector<Card*> dealCard(int num);
 
-    QVector<Card*> findBestHand(const QVector<Card*>& list, QVector<Card*> &outlist);
 
-    bool isStraightFlush(const QVector<Card*>& list, QVector<Card*> &outlist);
+    static QVector<Card*> findBestHand(const QVector<Card*>& list, QVector<Card*> &outlist);
 
-    bool isFourOfAKind();
-    bool isFullHouse();
-    bool isFlush();
-    bool isStraight(const QVector<Card*>& list, QVector<Card*> &outlist);
-    bool isThreeOfAKind();
-    bool isTwoPairs();
-    bool isOnePair();
+    static bool isStraightFlush(const QVector<Card*>& list, QVector<Card*> &outlist);
+    static bool isFourOfAKind(const QVector<Card*>& list, QVector<Card*> &outlist);
+    static bool isFullHouse(const QVector<Card*>& list, QVector<Card*> &outlist);
+    static bool isFlush(const QVector<Card*>& list, QVector<Card*> &outlist);
+    static bool isStraight(const QVector<Card*>& list, QVector<Card*> &outlist);
+    static bool isThreeOfAKind(const QVector<Card*>& list, QVector<Card*> &outlist);
+    static bool isTwoPairs(const QVector<Card*>& list, QVector<Card*> &outlist);
+    static bool isOnePair(const QVector<Card*>& list, QVector<Card*> &outlist);
 
+    static void shortCardList(QVector<Card*>& list);
 
-    QString printList(const QVector<Card*>& list, QString str = "print card list : ");
+    static QString printList(const QVector<Card*>& list, QString str = "");
 
 private:
     QVector<Card*> *m_list = nullptr;
