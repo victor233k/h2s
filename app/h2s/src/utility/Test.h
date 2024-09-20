@@ -17,7 +17,11 @@ public:
     void testIsStraightFlush();
     void testIsFourOfAKind();
     void testIsFullHouse();
-
+    void testIsFlush();
+    void testIsStraight();
+    void testIsThreeOfAKind();
+    void testIsTwoPairs();
+    void testIsOnePair();
 
 
 private:

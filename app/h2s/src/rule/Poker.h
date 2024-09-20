@@ -29,8 +29,7 @@ public:
     void shuffleCards();
     QVector<Card*> dealCard(int num);
 
-
-    static QVector<Card*> findBestHand(const QVector<Card*>& list, QVector<Card*> &outlist);
+    static bool findBestHand(const QVector<Card*>& list, QVector<Card*> &outlist);
 
     static bool isStraightFlush(const QVector<Card*>& list, QVector<Card*> &outlist);
     static bool isFourOfAKind(const QVector<Card*>& list, QVector<Card*> &outlist);

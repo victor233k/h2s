@@ -12,8 +12,11 @@ static const QString QML_FILE = "file:///";
 BIZCommand::BIZCommand(QObject *parent) : QObject(parent)
 {
     qInfo() << "BIZCommand init";
-
+#ifdef QT_DEBUG
     Test test;
+#endif
+
+
 }
 
 QUrl BIZCommand::getAppDir()

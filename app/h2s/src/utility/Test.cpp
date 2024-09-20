@@ -10,7 +10,14 @@ Test::Test(QObject *parent) : QObject(parent)
     testDealCard();
     testIsStraightFlush();
     testIsFourOfAKind();
-    //    testFindBestHand();
+    testIsFullHouse();
+    testIsFlush();
+    testIsStraight();
+    testIsThreeOfAKind();
+    testIsTwoPairs();
+    testIsOnePair();
+
+    testFindBestHand();
 }
 
 Test::~Test()
@@ -20,7 +27,6 @@ Test::~Test()
 
 void Test::testDealCard()
 {
-    qInfo() << __func__;
     Poker cards;
     cards.shuffleCards();
     auto list = cards.dealCard(7);
@@ -29,67 +35,148 @@ void Test::testDealCard()
 
 void Test::testFindBestHand()
 {
-    qInfo() << __func__;
     Poker cards;
     cards.shuffleCards();
     auto list = cards.dealCard(7);
     QVector<Card*> bestHand;
-    cards.findBestHand(list, bestHand);
+    qInfo() << __func__ << Poker::findBestHand(list, bestHand);
     qInfo() << __func__ << Poker::printList(list,    "in  list : ");
     qInfo() << __func__ << Poker::printList(bestHand,"out list : ");
 }
 
 void Test::testIsStraightFlush()
 {
-    qInfo() << __func__;
     QVector<Card*> list0;
     QVector<Card*> outlist;
     list0 = getFourOfAKindList();
-    Poker::isStraightFlush(list0, outlist);
+    qInfo() << __func__ << Poker::isStraightFlush(list0, outlist);
     qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
     qInfo() << __func__ << Poker::printList(outlist,"out list : ");
 
     outlist.clear();
 
     list0 = getStraightFlushList();
-    Poker::isStraightFlush(list0, outlist);
+    qInfo() << __func__ << Poker::isStraightFlush(list0, outlist);
     qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
     qInfo() << __func__ << Poker::printList(outlist,"out list : ");
 }
 
 void Test::testIsFourOfAKind()
 {
-    qInfo() << __func__;
     QVector<Card*> list0;
     QVector<Card*> outlist;
 
     list0 = getStraightFlushList();
-    Poker::isFourOfAKind(list0, outlist);
+    qInfo() << __func__ << Poker::isFourOfAKind(list0, outlist);
     qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
     qInfo() << __func__ << Poker::printList(outlist,"out list : ");
 
     outlist.clear();
 
     list0 = getFourOfAKindList();
-    Poker::isFourOfAKind(list0, outlist);
+    qInfo() << __func__ << Poker::isFourOfAKind(list0, outlist);
     qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
     qInfo() << __func__ << Poker::printList(outlist,"out list : ");
 }
 
 void Test::testIsFullHouse()
 {
-    qInfo() << __func__;
     QVector<Card*> list0;
     QVector<Card*> outlist;
     list0 = getTwoPairsList();
-    Poker::isFullHouse(list0, outlist);
+    qInfo() << __func__ << Poker::isFullHouse(list0, outlist);
     qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
     qInfo() << __func__ << Poker::printList(outlist,"out list : ");
 
     outlist.clear();
 
     list0 = getFullHouseList();
-    Poker::isFullHouse(list0, outlist);
+    qInfo() << __func__ << Poker::isFullHouse(list0, outlist);
+    qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
+    qInfo() << __func__ << Poker::printList(outlist,"out list : ");
+}
+
+void Test::testIsFlush()
+{
+    QVector<Card*> list0;
+    QVector<Card*> outlist;
+    list0 = getTwoPairsList();
+    qInfo() << __func__ << Poker::isFlush(list0, outlist);
+    qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
+    qInfo() << __func__ << Poker::printList(outlist,"out list : ");
+
+    outlist.clear();
+
+    list0 = getFlushList();
+    qInfo() << __func__ << Poker::isFlush(list0, outlist);
+    qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
+    qInfo() << __func__ << Poker::printList(outlist,"out list : ");
+}
+
+void Test::testIsStraight()
+{
+    QVector<Card*> list0;
+    QVector<Card*> outlist;
+    list0 = getTwoPairsList();
+    qInfo() << __func__ << Poker::isStraight(list0, outlist);
+    qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
+    qInfo() << __func__ << Poker::printList(outlist,"out list : ");
+
+    outlist.clear();
+
+    list0 = getStraightList();
+    qInfo() << __func__ << Poker::isStraight(list0, outlist);
+    qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
+    qInfo() << __func__ << Poker::printList(outlist,"out list : ");
+}
+
+void Test::testIsThreeOfAKind()
+{
+    QVector<Card*> list0;
+    QVector<Card*> outlist;
+    list0 = getTwoPairsList();
+    qInfo() << __func__ << Poker::isThreeOfAKind(list0, outlist);
+    qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
+    qInfo() << __func__ << Poker::printList(outlist,"out list : ");
+
+    outlist.clear();
+
+    list0 = getThreeOfAKindList();
+    qInfo() << __func__ << Poker::isThreeOfAKind(list0, outlist);
+    qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
+    qInfo() << __func__ << Poker::printList(outlist,"out list : ");
+}
+
+void Test::testIsTwoPairs()
+{
+    QVector<Card*> list0;
+    QVector<Card*> outlist;
+    list0 = getOnePairList();
+    qInfo() << __func__ << Poker::isTwoPairs(list0, outlist);
+    qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
+    qInfo() << __func__ << Poker::printList(outlist,"out list : ");
+
+    outlist.clear();
+
+    list0 = getTwoPairsList();
+    qInfo() << __func__ << Poker::isTwoPairs(list0, outlist);
+    qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
+    qInfo() << __func__ << Poker::printList(outlist,"out list : ");
+}
+
+void Test::testIsOnePair()
+{
+    QVector<Card*> list0;
+    QVector<Card*> outlist;
+    list0 = getStraightList();
+    qInfo() << __func__ << Poker::isOnePair(list0, outlist);
+    qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
+    qInfo() << __func__ << Poker::printList(outlist,"out list : ");
+
+    outlist.clear();
+
+    list0 = getOnePairList();
+    qInfo() << __func__ << Poker::isOnePair(list0, outlist);
     qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
     qInfo() << __func__ << Poker::printList(outlist,"out list : ");
 }
@@ -136,7 +223,7 @@ QVector<Card *> Test::getFullHouseList()
 
 QVector<Card *> Test::getFlushList()
 {
-    return getCustomList("SJH3STS5SKCASQ");
+    return getCustomList("SJS3STS5SKCASQ");
 }
 
 QVector<Card *> Test::getStraightList()
