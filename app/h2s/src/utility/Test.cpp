@@ -38,6 +38,7 @@ void Test::testFindBestHand()
     Poker cards;
     cards.shuffleCards();
     auto list = cards.dealCard(7);
+//    auto list = getCustomList("CKCTCQC5C7H5HJ");q
     QVector<Card*> bestHand;
     qInfo() << __func__ << Poker::findBestHand(list, bestHand);
     qInfo() << __func__ << Poker::printList(list,    "in  list : ");
@@ -83,7 +84,8 @@ void Test::testIsFullHouse()
 {
     QVector<Card*> list0;
     QVector<Card*> outlist;
-    list0 = getTwoPairsList();
+//    list0 = getTwoPairsList();
+    list0 = getFlushList();
     qInfo() << __func__ << Poker::isFullHouse(list0, outlist);
     qInfo() << __func__ << Poker::printList(list0,  "in  list : ");
     qInfo() << __func__ << Poker::printList(outlist,"out list : ");
@@ -223,6 +225,8 @@ QVector<Card *> Test::getFullHouseList()
 
 QVector<Card *> Test::getFlushList()
 {
+
+    return getCustomList("CKCTCQC5C7H5HJ");
     return getCustomList("SJS3STS5SKCASQ");
 }
 

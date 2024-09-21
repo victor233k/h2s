@@ -251,7 +251,7 @@ bool Poker::isFullHouse(const QVector<Card *> &list, QVector<Card *> &outlist)
             }
         }
     }
-
+    outlist.clear();
     return false;
 }
 
