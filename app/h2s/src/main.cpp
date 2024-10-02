@@ -17,7 +17,6 @@
 #include "src/utility/Logger.h"
 #include "src/utility/Bizcommand.h"
 
-
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -40,7 +39,6 @@ int main(int argc, char *argv[])
 
     qInfo() << "Try setContextProperty";
     engine->rootContext()->setContextProperty("bizCommand", bizCommand);
-
 
     engine->load(QUrl(QStringLiteral("qrc:/main.qml")));
 

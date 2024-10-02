@@ -5,6 +5,7 @@
 
 Test::Test(QObject *parent) : QObject(parent)
 {
+
     initCardList();
 
     testDealCard();

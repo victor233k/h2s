@@ -1,8 +1,15 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>api/BizApi.qml</file>
-        <file>PokerTable.qml</file>
+        <file>HomeForm.ui.qml</file>
+        <file>Page1Form.ui.qml</file>
+        <file>Page2Form.ui.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>AllCards.qml</file>
+        <file>TableHorizontal.qml</file>
         <file>Card.qml</file>
+        <file>Player.qml</file>
+        <file>TableVertical.qml</file>
+        <file>api/BizApi.qml</file>
     </qresource>
 </RCC>

@@ -1,4 +1,4 @@
-QT += widgets quick qml gui
+QT += widgets quick qml gui svg
 
 CONFIG += c++11
 
@@ -13,22 +13,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-PRJDIR       = .
-DESTDIR     = $$PRJDIR/bin
+CONFIG += android
 
-TARGET = h2s
-
-HEADERS += \
-    src/rule/Card.h \
-    src/rule/Poker.h \
-    src/utility/Bizcommand.h \
-    src/utility/Logger.h \
-    src/utility/Test.h \
-    src/utility/Utility.h
 
 SOURCES += \
         src/main.cpp \
         src/rule/Card.cpp \
+        src/rule/Player.cpp \
+        src/rule/PlayerModel.cpp \
         src/rule/Poker.cpp \
         src/utility/Bizcommand.cpp \
         src/utility/Test.cpp \
@@ -36,8 +28,7 @@ SOURCES += \
 
 RESOURCES += \
         assets/qml/qml.qrc \
-        assets/images/images.qrc \
-        assets/fonts/fonts.qrc \
+        assets/images/images.qrc
 
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
@@ -51,4 +42,23 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+DISTFILES += \
+    android/AndroidManifest.xml \
+    android/build.gradle \
+    android/gradle/wrapper/gradle-wrapper.jar \
+    android/gradle/wrapper/gradle-wrapper.properties \
+    android/gradlew \
+    android/gradlew.bat \
+    android/res/values/libs.xml
 
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+
+HEADERS += \
+    src/rule/Card.h \
+    src/rule/Player.h \
+    src/rule/PlayerModel.h \
+    src/rule/Poker.h \
+    src/utility/Bizcommand.h \
+    src/utility/Logger.h \
+    src/utility/Test.h \
+    src/utility/Utility.h

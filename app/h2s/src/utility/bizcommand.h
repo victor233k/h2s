@@ -11,9 +11,12 @@ public:
     explicit BIZCommand(QObject *parent = nullptr);
 
     Q_PROPERTY(QUrl appDir READ getAppDir CONSTANT)
+    Q_PROPERTY(QString logTest READ getLogTest CONSTANT)
 
+public:
     QUrl getAppDir();
 
+    QString getLogTest();
 signals:
 
 };

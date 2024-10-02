@@ -1,4 +1,4 @@
-#include "bizcommand.h"
+#include "Bizcommand.h"
 
 #include <QDebug>
 #include <QGuiApplication>
@@ -17,6 +17,7 @@ BIZCommand::BIZCommand(QObject *parent) : QObject(parent)
 #endif
 
 
+
 }
 
 QUrl BIZCommand::getAppDir()
@@ -26,4 +27,9 @@ QUrl BIZCommand::getAppDir()
        .append(QGuiApplication::applicationDirPath());
 
     return QUrl(str);
+}
+
+QString BIZCommand::getLogTest()
+{
+    return QString("yes~~~~~~~~~");
 }

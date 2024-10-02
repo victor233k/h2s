@@ -10,6 +10,11 @@
 #include <QStandardPaths>
 #include <QCoreApplication>
 
+#ifdef ANDROID
+#include <android/log.h>
+#endif
+
+
 #define LOG_FILE_KEEP_NUM 2
 
 class QLogger
@@ -18,7 +23,8 @@ public:
     static QString getConfigFolder()
     {
 
-        QString folder = QCoreApplication::applicationDirPath() + "/log";
+//        QString folder = QCoreApplication::applicationDirPath() + "/log";
+        QString folder = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/log";
         if (!QDir(folder).exists())
         {
             QDir().mkdir(folder);
@@ -89,6 +95,36 @@ public:
             break;
         }
 
+#ifdef ANDROID
+        // 定义 TAG 为 "QtLog"，你可以根据需要更改它
+        const char *tag = "QtLog";
+
+        // 根据 Qt 日志类型映射到 Android 日志级别
+        int androidLevel;
+        switch (type) {
+        case QtDebugMsg:
+            androidLevel = ANDROID_LOG_DEBUG;
+            break;
+        case QtInfoMsg:
+            androidLevel = ANDROID_LOG_INFO;
+            break;
+        case QtWarningMsg:
+            androidLevel = ANDROID_LOG_WARN;
+            break;
+        case QtCriticalMsg:
+            androidLevel = ANDROID_LOG_ERROR;
+            break;
+        case QtFatalMsg:
+            androidLevel = ANDROID_LOG_FATAL;
+            break;
+        default:
+            androidLevel = ANDROID_LOG_VERBOSE;
+            break;
+        }
+
+        // 输出到 logcat
+        __android_log_write(androidLevel, tag, localMsg.constData());
+#endif
         // #4 joint string
         QString currentDateTime = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
         QString logMsg;

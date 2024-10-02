@@ -1,4 +1,4 @@
-﻿#include "utility.h"
+﻿#include "Utility.h"
 #include <QThread>
 
 static Utility *pInstance = Q_NULLPTR;
