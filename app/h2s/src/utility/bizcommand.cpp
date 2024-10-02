@@ -31,5 +31,5 @@ QUrl BIZCommand::getAppDir()
 
 QString BIZCommand::getLogTest()
 {
-    return QString("yes~~~~~~~~~");
+    return QString("android debug ~~~~~~~~~");
 }
