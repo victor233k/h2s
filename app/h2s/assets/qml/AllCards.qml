@@ -1,107 +1,101 @@
 import QtQuick 2.14
 import QtQuick.Controls 2.14
 
+//Page {
+Item {
+//Popup {
+    id: root
+//    title: qsTr("all cards")
 
-Page {
-    title: qsTr("Page 3")
-//    anchors.fill: parent
+    property int caller: 0
+    property real cellWidth: width * 0.0769
+    property real cellHeight: cellWidth * 1.5
+    property real gridViewWidth: cellWidth * 13
+    property real gridViewHeight: cellHeight * 4
 
+    signal okClicked(int cardId, int caller)
+    signal backClicked(int caller)
+    signal cancelClicked(int caller)
+//    signal backClicked(int )
 
-    GridView {
-        id: gridView
-        anchors.fill: parent
-        anchors.centerIn: parent
-        anchors.margins: 5
-        cellWidth: 59
-        cellHeight: 120
+    Column {
+//        anchors.centerIn: parent
+        anchors.horizontalCenter: parent.horizontalCenter
+        Item {
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: root.gridViewWidth
+            height: root.gridViewHeight
+            GridView {
+                id: gridView
+                width: root.gridViewWidth
+                height: root.gridViewHeight
+                cellWidth: root.cellWidth
+                cellHeight: root.cellHeight
 
-        flow: GridView.FlowLeftToRight
-//        model: 52
-        model: images.length
-        delegate: Item {
-            width: gridView.cellWidth
-            height: gridView.cellHeight
+                flow: GridView.FlowLeftToRight
 
-            Image {
-                anchors.margins: 5
-                anchors.fill: parent
-                source: getImagePath(index)
-                fillMode: Image.PreserveAspectFit
-                asynchronous: true
+                model: 52
+
+                delegate: Item {
+                    width: root.cellWidth
+                    height: root.cellHeight
+
+                    Button {
+                        anchors.fill: parent
+                        onClicked: {
+                            gridView.currentIndex = index
+                            root.okClicked(index, root.caller)
+                        }
+                    }
+
+                    Image {
+                        anchors.margins: 2
+                        anchors.fill: parent
+                        source: bizCommand.getCardImage(index)//TODO:考虑已被选择的情况？
+                        fillMode: Image.PreserveAspectFit
+                        asynchronous: true
+                    }
+
+//                    ShowBorder{
+//                        id: bord
+//        //                visible: false
+//                        visible: gridView.currentIndex === index ? true : false
+//                    }
+                }
             }
         }
 
 
-    }
+        Row {
+            anchors.horizontalCenter: parent.horizontalCenter
+            Button {
 
-    function getImagePath(index) {
+                text: qsTr("关闭")
+                onClicked: {
+                    root.visible= false
+                }
+            }
+            Button {
 
-        // 检查索引是否在有效范围内
-        if (index >= 0 && index < images.length) {
-            return images[index];
-        } else {
-            console.warn("Index out of range: " + index);
-            return "qrc:/c120/back.png"; // 返回一个默认图片路径
+                text: qsTr("上一步")
+                onClicked: {
+                    root.backClicked(root.caller)
+                }
+            }
+            Button {
+
+                text: qsTr("取消")
+                onClicked: {
+                    root.cancelClicked(root.caller)
+                }
+            }
+//            Button {
+//                text: qsTr("确认")
+//                onClicked: {
+//                    root.okClicked(gridView.currentIndex, root.caller)
+//                }
+//            }
         }
     }
 
-    property var images : [
-        "qrc:/c120/back.png",
-//        "qrc:/c120/C.png",
-        "qrc:/c120/C2.png",
-        "qrc:/c120/C3.png",
-        "qrc:/c120/C4.png",
-        "qrc:/c120/C5.png",
-        "qrc:/c120/C6.png",
-        "qrc:/c120/C7.png",
-        "qrc:/c120/C8.png",
-        "qrc:/c120/C9.png",
-        "qrc:/c120/CT.png",
-        "qrc:/c120/CJ.png",
-        "qrc:/c120/CQ.png",
-        "qrc:/c120/CK.png",
-        "qrc:/c120/CA.png",
-//        "qrc:/c120/D.png",
-        "qrc:/c120/D2.png",
-        "qrc:/c120/D3.png",
-        "qrc:/c120/D4.png",
-        "qrc:/c120/D5.png",
-        "qrc:/c120/D6.png",
-        "qrc:/c120/D7.png",
-        "qrc:/c120/D8.png",
-        "qrc:/c120/D9.png",
-        "qrc:/c120/DT.png",
-        "qrc:/c120/DJ.png",
-        "qrc:/c120/DQ.png",
-        "qrc:/c120/DK.png",
-        "qrc:/c120/DA.png",
-//        "qrc:/c120/H.png",
-        "qrc:/c120/H2.png",
-        "qrc:/c120/H3.png",
-        "qrc:/c120/H4.png",
-        "qrc:/c120/H5.png",
-        "qrc:/c120/H6.png",
-        "qrc:/c120/H7.png",
-        "qrc:/c120/H8.png",
-        "qrc:/c120/H9.png",
-        "qrc:/c120/HT.png",
-        "qrc:/c120/HJ.png",
-        "qrc:/c120/HQ.png",
-        "qrc:/c120/HK.png",
-        "qrc:/c120/HA.png",
-//        "qrc:/c120/S.png",
-        "qrc:/c120/S2.png",
-        "qrc:/c120/S3.png",
-        "qrc:/c120/S4.png",
-        "qrc:/c120/S5.png",
-        "qrc:/c120/S6.png",
-        "qrc:/c120/S7.png",
-        "qrc:/c120/S8.png",
-        "qrc:/c120/S9.png",
-        "qrc:/c120/ST.png",
-        "qrc:/c120/SJ.png",
-        "qrc:/c120/SQ.png",
-        "qrc:/c120/SK.png",
-        "qrc:/c120/SA.png"
-    ];
 }

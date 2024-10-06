@@ -6,16 +6,24 @@ ApplicationWindow {
 //Window {
     id: window
     visible: true
-//    width: Qt.platform.os === "android" ? Screen.width -10 : 320
-//    height: 3200
-//    width: 120
-//    height: 120
 
     title: qsTr("Stack")
 
 //    header: ToolBar {
+    onClosing: {
+        if(Qt.platform.os === "android")
+        {
+            close.accepted = false;
+        }
+        if(stackView.depth > 1)
+        {
+            stackView.pop()
+        } else {
+            bizCommand.appQuit(0)
+        }
+    }
+
     footer: ToolBar {
-//    ToolBar {
         contentHeight: toolButton.implicitHeight
 
         ToolButton {
@@ -66,6 +74,14 @@ ApplicationWindow {
                 width: parent.width
                 onClicked: {
                     stackView.push("AllCards.qml")
+                    drawer.close()
+                }
+            }
+            ItemDelegate {
+                text: qsTr("Card Pick")
+                width: parent.width
+                onClicked: {
+                    stackView.push("CardPick.qml")
                     drawer.close()
                 }
             }

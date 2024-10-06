@@ -11,5 +11,9 @@
         <file>Player.qml</file>
         <file>TableVertical.qml</file>
         <file>api/BizApi.qml</file>
+        <file>api/PublicCardModelApi.qml</file>
+        <file>api/PlayerModelApi.qml</file>
+        <file>ShowBorder.qml</file>
+        <file>CardPick.qml</file>
     </qresource>
 </RCC>

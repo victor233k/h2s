@@ -4,9 +4,9 @@ import QtQuick.Controls 2.14
 
 //竖桌
 Page {
+    id: page
     anchors.fill: parent
     anchors.centerIn: parent
-
 
     Rectangle {
         id:tableRect
@@ -23,13 +23,26 @@ Page {
         spacing: 20
 
         ListView {
-            model: 5
-            width: 30 * 5
+            id: pubListView
+            model:publicCardModel
+            width: 35 * 5
             height: 60
             interactive: false
+            spacing: 5
             orientation: ListView.Horizontal
-            delegate: Card {
 
+            delegate: Card {
+                info:model
+                onClicked: {
+                    cardDialog.caller = index
+                    cardDialog.visible = true
+                    pubListView.currentIndex = index
+
+                }
+                ShowBorder{
+                    id: bord
+                    visible: pubListView.currentIndex === index ? true : false
+                }
             }
         }
 
@@ -50,11 +63,12 @@ Page {
         x: tableRect.x
         y: tableRect.y
 
-        model: 8 // 假设我们要在路径上放置10个控件
+        model: playerModel // 假设我们要在路径上放置10个控件
         path: playerPath
         delegate: Player {
-
+                info: model
         }
+
 
         Path {
             id: playerPath
@@ -96,4 +110,29 @@ Page {
         }
     }
 
+    AllCards {
+        id: cardDialog
+        visible: false
+        anchors.fill: parent
+        onOkClicked: {
+            console.log("test", cardId, caller)
+            publicCardModel.onCardChosen(cardId, caller)
+            if(pubListView.currentIndex < 4)
+            {
+                pubListView.currentIndex = pubListView.currentIndex + 1
+                cardDialog.caller = pubListView.currentIndex
+            }
+        }
+        onCancelClicked: {
+            publicCardModel.onCancelClicked(caller)
+        }
+        onBackClicked: {
+            publicCardModel.onBackClicked(caller)
+            if(pubListView.currentIndex > 0)
+            {
+                pubListView.currentIndex = pubListView.currentIndex - 1
+                cardDialog.caller = pubListView.currentIndex
+            }
+        }
+    }
 }

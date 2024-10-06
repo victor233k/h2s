@@ -22,6 +22,8 @@ SOURCES += \
         src/rule/Player.cpp \
         src/rule/PlayerModel.cpp \
         src/rule/Poker.cpp \
+        src/rule/PublicCardModel.cpp \
+        src/rule/testmodel.cpp \
         src/utility/Bizcommand.cpp \
         src/utility/Test.cpp \
         src/utility/Utility.cpp
@@ -55,9 +57,12 @@ ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 
 HEADERS += \
     src/rule/Card.h \
+    src/rule/Definitions.h \
     src/rule/Player.h \
     src/rule/PlayerModel.h \
     src/rule/Poker.h \
+    src/rule/PublicCardModel.h \
+    src/rule/testmodel.h \
     src/utility/Bizcommand.h \
     src/utility/Logger.h \
     src/utility/Test.h \

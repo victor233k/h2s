@@ -34,13 +34,13 @@ void Poker::shuffleCards()
     std::shuffle(m_randomList.begin(), m_randomList.end(), QRandomGeneratorAdapter());
 }
 
-QVector<Card *> Poker::dealCard(int num)
+QVector<Card > Poker::dealCard(int num)
 {
     if(num > CARD_MAX_NUM) {
         num = CARD_MAX_NUM;
         qWarning() << "deal card num > " << CARD_MAX_NUM << ", just return 52 card!";
     }
-    QVector<Card *> list;
+    QVector<Card > list;
     for(int i = 0; i < num; i++)
     {
         int index = m_randomList.last();
@@ -50,58 +50,72 @@ QVector<Card *> Poker::dealCard(int num)
     return list;
 }
 
-bool Poker::findBestHand(const QVector<Card*>& list, QVector<Card*> &outlist)
+//int Poker::findBestHand(const QString &list, QString &outlist)
+//{
+
+//}
+
+int Poker::findBestHand(const QVector<Card >& list, QVector<Card > &outlist)
 {
-    QVector<Card *> bestHand;
-    QVector<Card *> sortList = list;
-    shortCardList(sortList);
+    QVector<Card > bestHand;
+    QVector<Card > sortList = list;
+    int score = 0;
+    sortCardList(sortList);
 
     if(isStraightFlush(sortList, outlist))
     {
         qInfo() << "Find Straight Flush!";
-        return true;
+        score = calculateHandScore(ShapeValue::StraightFlush, outlist);
+        return score;
     }
 
     if(isFourOfAKind(sortList, outlist))
     {
         qInfo() << "Find Four Of A Kind!";
-        return true;
+        score = calculateHandScore(ShapeValue::FourofaKind, outlist);
+        return score;
     }
 
     if(isFullHouse(sortList, outlist))
     {
         qInfo() << "Find FullHouse!";
-        return true;
+        score = calculateHandScore(ShapeValue::Fullhouse, outlist);
+        return score;
     }
 
     if(isFlush(sortList, outlist))
     {
         qInfo() << "Find Flush!";
-        return true;
+        score = calculateHandScore(ShapeValue::Flush, outlist);
+        return score;
     }
 
     if(isStraight(sortList, outlist))
     {
         qInfo() << "Find Straight!";
-        return true;
+        score = calculateHandScore(ShapeValue::Straight, outlist);
+        return score;
     }
 
     if(isThreeOfAKind(sortList, outlist))
     {
         qInfo() << "Find Three Of A Kind!";
-        return true;
+        score = calculateHandScore(ShapeValue::Threeofakind, outlist);
+        return score;
     }
 
     if(isTwoPairs(sortList, outlist))
     {
         qInfo() << "Find Two Pairs!";
-        return true;
+        score = calculateHandScore(ShapeValue::TwoPairs, outlist);
+        return score;
     }
 
     if(isOnePair(sortList, outlist))
     {
         qInfo() << "Find One Pair!";
-        return true;
+        score = calculateHandScore(ShapeValue::OnePair, outlist);
+        return score;
     }
 
     for(int i = 0; i < sortList.size(); i++)
@@ -110,40 +124,45 @@ bool Poker::findBestHand(const QVector<Card*>& list, QVector<Card*> &outlist)
             outlist.append(sortList.at(i));
         } else {
             qInfo() << "Find High Card!";
-            return true;
+            score = calculateHandScore(ShapeValue::NoPair, outlist);
+            return score;
         }
     }
+    qInfo() << "Find High Card!";
+    score = calculateHandScore(ShapeValue::NoPair, outlist);
+    return score;
 
-    return false;
+    return 0;
 }
 
-bool Poker::isStraightFlush(const QVector<Card*>& list, QVector<Card*> &outlist)
+bool Poker::isStraightFlush(const QVector<Card >& list, QVector<Card > &outlist)
 {
     bool haveSuit = false;
     QString suit;
     QMap<QString, int> suitCount;
-    QVector<Card *> sortList = list;
+    QVector<Card > sortList = list;
 
-    shortCardList(sortList);
+    sortCardList(sortList);
 
     for(int i = 0; i < sortList.size(); i++)
     {
-        suitCount[sortList.at(i)->getSuit()]++;
-        if(suitCount[sortList.at(i)->getSuit()] >= 5)
+        suitCount[sortList[i].getSuit()]++;
+        if(suitCount[sortList[i].getSuit()] >= 5)
         {
-            suit = sortList.at(i)->getSuit();
+            suit = sortList[i].getSuit();
             haveSuit = true;
         }
     }
     if(!haveSuit)
     {
+        outlist.clear();
         return false;
     }
 
-    QVector<Card *> suitList;
+    QVector<Card > suitList;
     for(int i = 0; i < sortList.size(); i++)
     {
-        if(sortList.at(i)->getSuit() == suit)
+        if(sortList[i].getSuit() == suit)
         {
             suitList.append(sortList.at(i));
         }
@@ -153,21 +172,21 @@ bool Poker::isStraightFlush(const QVector<Card*>& list, QVector<Card*> &outlist)
     {
         return true;
     }
-
+    outlist.clear();
     return false;
 }
 
-bool Poker::isFourOfAKind(const QVector<Card *> &list, QVector<Card *> &outlist)
+bool Poker::isFourOfAKind(const QVector<Card > &list, QVector<Card > &outlist)
 {
-    QVector<Card *> sortList = list;
-    shortCardList(sortList);
+    QVector<Card > sortList = list;
+    sortCardList(sortList);
     int count = 0;
 
     for(int i = 0; i < sortList.size(); i++)
     {
         if(i > 0) {
-            int prevValue = sortList.at(i-1)->getRankValue();
-            int currentValue = sortList.at(i)->getRankValue();
+            int prevValue = sortList[i-1].getRankValue();
+            int currentValue = sortList[i].getRankValue();
 
             if(prevValue == currentValue)
             {
@@ -177,7 +196,7 @@ bool Poker::isFourOfAKind(const QVector<Card *> &list, QVector<Card *> &outlist)
                 {
                      outlist.append(sortList.at(i));
 
-                     if(sortList.at(0)->getRankValue() != sortList.at(i-1)->getRankValue())
+                     if(sortList[0].getRankValue() != sortList[i-1].getRankValue())
                      {
                          //A K K K K 3 2
                          outlist.append(sortList.at(0));
@@ -193,14 +212,14 @@ bool Poker::isFourOfAKind(const QVector<Card *> &list, QVector<Card *> &outlist)
             }
         }
     }
-
+    outlist.clear();
     return false;
 }
 
-bool Poker::isFullHouse(const QVector<Card *> &list, QVector<Card *> &outlist)
+bool Poker::isFullHouse(const QVector<Card > &list, QVector<Card > &outlist)
 {
-    QVector<Card *> sortList = list;
-    shortCardList(sortList);
+    QVector<Card > sortList = list;
+    sortCardList(sortList);
     int count = 0;
     int TreeOfKindValue;
     bool haveThreeOfAKind = false;
@@ -209,8 +228,8 @@ bool Poker::isFullHouse(const QVector<Card *> &list, QVector<Card *> &outlist)
     for(int i = 0; i < sortList.size(); i++)
     {
         if(i > 0) {
-            int prevValue = sortList.at(i-1)->getRankValue();
-            int currentValue = sortList.at(i)->getRankValue();
+            int prevValue = sortList[i-1].getRankValue();
+            int currentValue = sortList[i].getRankValue();
 
             if(prevValue == currentValue)
             {
@@ -231,12 +250,12 @@ bool Poker::isFullHouse(const QVector<Card *> &list, QVector<Card *> &outlist)
     }
     if(haveThreeOfAKind)
     {
-        //find one pair
+        //find best one pair
         for(int i = 0; i < sortList.size(); i++)
         {
             if(i > 0) {
-                int prevValue = sortList.at(i-1)->getRankValue();
-                int currentValue = sortList.at(i)->getRankValue();
+                int prevValue = sortList[i-1].getRankValue();
+                int currentValue = sortList[i].getRankValue();
 
                 if(currentValue == TreeOfKindValue)
                     continue;
@@ -255,45 +274,47 @@ bool Poker::isFullHouse(const QVector<Card *> &list, QVector<Card *> &outlist)
     return false;
 }
 
-bool Poker::isFlush(const QVector<Card *> &list, QVector<Card *> &outlist)
+bool Poker::isFlush(const QVector<Card > &list, QVector<Card > &outlist)
 {
     bool haveSuit = false;
     QString suit;
     QMap<QString, int> suitCount;
-    QVector<Card *> sortList = list;
+    QVector<Card > sortList = list;
 
-    shortCardList(sortList);
+    sortCardList(sortList);
 
     for(int i = 0; i < sortList.size(); i++)
     {
-        suitCount[sortList.at(i)->getSuit()]++;
-        if(suitCount[sortList.at(i)->getSuit()] >= 5)
+        suitCount[sortList[i].getSuit()]++;
+        if(suitCount[sortList[i].getSuit()] >= 5)
         {
-            suit = sortList.at(i)->getSuit();
+            suit = sortList[i].getSuit();
             haveSuit = true;
         }
     }
     if(!haveSuit)
     {
+        outlist.clear();
         return false;
     }
 
-    QVector<Card *> suitList;
+    QVector<Card > suitList;
     for(int i = 0; i < sortList.size(); i++)
     {
-        if(sortList.at(i)->getSuit() == suit)
+        if(sortList[i].getSuit() == suit)
         {
             outlist.append(sortList.at(i));
-            if(i == 5)
+            if(outlist.size() == 5)
             {
                 return true;
             }
         }
     }
+    outlist.clear();
     return false;
 }
 
-bool Poker::isStraight(const QVector<Card*>& list, QVector<Card*> &outlist)
+bool Poker::isStraight(const QVector<Card >& list, QVector<Card > &outlist)
 {
     if(list.empty())
     {
@@ -301,11 +322,11 @@ bool Poker::isStraight(const QVector<Card*>& list, QVector<Card*> &outlist)
     }
 
     int count = 0;
-    QVector<Card*> sortList = list;
+    QVector<Card > sortList = list;
 
-    shortCardList(sortList);
+    sortCardList(sortList);
 
-    if(sortList.at(0)->getRankValue() == Card::getRankValue("A"))
+    if(sortList[0].getRankValue() == Card::getRankValue("A"))
     {
         sortList.append(sortList.at(0));
     }
@@ -313,9 +334,9 @@ bool Poker::isStraight(const QVector<Card*>& list, QVector<Card*> &outlist)
     for(int i = 0; i < sortList.size(); i++)
     {
         if(i > 0) {
-            if(sortList.at(i-1)->getRankValue() == (sortList.at(i)->getRankValue() + 1) ||
-                    (sortList.at(i-1)->getRankValue() == Card::getRankValue("2") &&
-                     sortList.at(0)->getRankValue() ==  Card::getRankValue("A")) )
+            if(sortList[i-1].getRankValue() == (sortList[i].getRankValue() + 1) ||
+                    (sortList[i-1].getRankValue() == Card::getRankValue("2") &&
+                     sortList[0].getRankValue() ==  Card::getRankValue("A")) )
             {
                 outlist.append(sortList.at(i-1));
                 count++;
@@ -330,21 +351,21 @@ bool Poker::isStraight(const QVector<Card*>& list, QVector<Card*> &outlist)
             }
         }
     }
-
+    outlist.clear();
     return false;
 }
 
-bool Poker::isThreeOfAKind(const QVector<Card *> &list, QVector<Card *> &outlist)
+bool Poker::isThreeOfAKind(const QVector<Card > &list, QVector<Card > &outlist)
 {
-    QVector<Card *> sortList = list;
-    shortCardList(sortList);
+    QVector<Card > sortList = list;
+    sortCardList(sortList);
     int count = 0;
 
     for(int i = 0; i < sortList.size(); i++)
     {
         if(i > 0) {
-            int prevValue = sortList.at(i-1)->getRankValue();
-            int currentValue = sortList.at(i)->getRankValue();
+            int prevValue = sortList[i-1].getRankValue();
+            int currentValue = sortList[i].getRankValue();
 
             if(prevValue == currentValue)
             {
@@ -356,7 +377,7 @@ bool Poker::isThreeOfAKind(const QVector<Card *> &list, QVector<Card *> &outlist
                      int highCardcount = 0;
                      for(int j = 0; j < sortList.size(); j++)
                      {
-                         if(sortList.at(j)->getRankValue() != currentValue)
+                         if(sortList[j].getRankValue() != currentValue)
                          {
                              outlist.append(sortList.at(j));
                              highCardcount++;
@@ -373,14 +394,14 @@ bool Poker::isThreeOfAKind(const QVector<Card *> &list, QVector<Card *> &outlist
             }
         }
     }
-
+    outlist.clear();
     return false;
 }
 
-bool Poker::isTwoPairs(const QVector<Card *> &list, QVector<Card *> &outlist)
+bool Poker::isTwoPairs(const QVector<Card > &list, QVector<Card > &outlist)
 {
-    QVector<Card *> sortList = list;
-    shortCardList(sortList);
+    QVector<Card > sortList = list;
+    sortCardList(sortList);
 
     int pairValue1 = -1;
     int pairValue2 = -1;
@@ -388,15 +409,15 @@ bool Poker::isTwoPairs(const QVector<Card *> &list, QVector<Card *> &outlist)
     {
         if(i > 0)
         {
-            int prevValue = sortList.at(i-1)->getRankValue();
-            int currentValue = sortList.at(i)->getRankValue();
+            int prevValue = sortList[i-1].getRankValue();
+            int currentValue = sortList[i].getRankValue();
             if(prevValue == currentValue)
             {
                 if(pairValue1 == -1)
                 {
-                    pairValue1 = sortList.at(i)->getRankValue();
+                    pairValue1 = sortList[i].getRankValue();
                 } else if (pairValue2 == -1) {
-                    pairValue2 = sortList.at(i)->getRankValue();
+                    pairValue2 = sortList[i].getRankValue();
                 } else {
                     break;
                 }
@@ -413,8 +434,8 @@ bool Poker::isTwoPairs(const QVector<Card *> &list, QVector<Card *> &outlist)
     {
         for(int i = 0; i < sortList.size(); i++)
         {
-            if(sortList.at(i)->getRankValue() != pairValue1 &&
-               sortList.at(i)->getRankValue() != pairValue2)
+            if(sortList[i].getRankValue() != pairValue1 &&
+               sortList[i].getRankValue() != pairValue2)
             {
                 outlist.append(sortList.at(i));
                 break;
@@ -427,10 +448,10 @@ bool Poker::isTwoPairs(const QVector<Card *> &list, QVector<Card *> &outlist)
     return false;
 }
 
-bool Poker::isOnePair(const QVector<Card *> &list, QVector<Card *> &outlist)
+bool Poker::isOnePair(const QVector<Card > &list, QVector<Card > &outlist)
 {
-    QVector<Card *> sortList = list;
-    shortCardList(sortList);
+    QVector<Card > sortList = list;
+    sortCardList(sortList);
 
     int pairValue = -1;
 
@@ -438,8 +459,8 @@ bool Poker::isOnePair(const QVector<Card *> &list, QVector<Card *> &outlist)
     {
         if(i > 0)
         {
-            int prevValue = sortList.at(i-1)->getRankValue();
-            int currentValue = sortList.at(i)->getRankValue();
+            int prevValue = sortList[i-1].getRankValue();
+            int currentValue = sortList[i].getRankValue();
             if(prevValue == currentValue)
             {
                 pairValue = currentValue;
@@ -453,33 +474,72 @@ bool Poker::isOnePair(const QVector<Card *> &list, QVector<Card *> &outlist)
     {
         for(int i = 0; i < sortList.size(); i++)
         {
-            if(sortList.at(i)->getRankValue() != pairValue)
+            if(sortList[i].getRankValue() != pairValue)
             {
                 if(outlist.size() != 5) {
                     outlist.append(sortList.at(i));
-                } else {
-                    return true;
+                    if(outlist.size() == 5)
+                        return true;
                 }
-
             }
         }
     }
 
+    outlist.clear();
     return false;
 }
 
-void Poker::shortCardList(QVector<Card *> &list)
+int Poker::calculateHandScore(int shapeValue, const QVector<Card > &hand)
 {
-    std::sort(list.begin(), list.end(), [](const Card *a, const Card *b) {
-        return *a > *b;
+    int score = 1000000 * shapeValue;
+    for (int i = 0; i < hand.size(); ++i) {
+        Card card = hand.at(i);
+        int cardValue = card.getRankValue();
+        //13  4  3 2 1   130000 +  4000 +  300 + 20 + 1 134321
+        //12 11 10 9 8   120000 + 11000 + 1000 + 90 + 8 132098
+
+        //13  2  1    130000 +  2000 +  100  = 132100
+        //12 11 10    120000 + 11000 + 1000  = 132000
+        score += cardValue * (10000 >> i); // 2^(4-i) for i from 0 to 4
+    }
+    return score;
+}
+
+void Poker::sortCardList(QVector<Card > &list)
+{
+    std::sort(list.begin(), list.end(), [](const Card a, const Card b) {
+        return a > b;
     });
 }
 
-QString Poker::printList(const QVector<Card *> &list, QString str)
+int Poker::compareHands(QVector<Card > &hand1,QVector<Card > &hand2, QVector<Card > &pubList)
+{
+
+    QVector<Card > hand1tmp,out1;
+    QVector<Card > hand2tmp,out2;
+    hand1tmp << hand1 << pubList;
+    hand2tmp << hand2 << pubList;
+
+    int score1 = findBestHand(hand1tmp, out1);
+    int score2 = findBestHand(hand2tmp, out2);
+
+    qInfo() << "best hand1 : " << printList(out1) << " score 1 : " << score1;
+    qInfo() << "best hand2 : " << printList(out2) << " score 2 : " << score2;
+    if(score1 > score2){
+        return Greater;
+    } else if(score1 < score2){
+        return Less;
+    } else {
+        return Equal;
+    }
+}
+
+QString Poker::printList(const QVector<Card > &list, QString str)
 {
     for(int i = 0; i < list.size(); i++)
     {
-        str.append(list.at(i)->getCardString()).append(" ");
+        Card card = list.at(i);
+        str.append(card.getCardString()).append(" ");
     }
     return str;
 }
@@ -487,11 +547,11 @@ QString Poker::printList(const QVector<Card *> &list, QString str)
 
 void Poker::initCardList()
 {
-    m_list = new QVector<Card*>;
+    m_list = new QVector<Card >;
     for(int i = 0; i < CARD_MAX_NUM; i++)
     {
-        Card * card = new Card(i);
-        m_list->append(card);
+//        Card  card = new Card(i);
+        m_list->append(Card(i));
     }
 }
 
@@ -502,14 +562,14 @@ void Poker::clearCardList()
         qWarning() << "m_list is nullptr";
         return;
     }
-    for(int i = 0; i < m_list->size(); i++)
-    {
-        Card* card = m_list->at(i);
-        if(card != nullptr)
-        {
-            delete card;
-        }
-    }
+//    for(int i = 0; i < m_list->size(); i++)
+//    {
+//        Card  card = m_list->at(i);
+//        if(card != nullptr)
+//        {
+//            delete card;
+//        }
+//    }
     m_list->clear();
     delete m_list;
 }

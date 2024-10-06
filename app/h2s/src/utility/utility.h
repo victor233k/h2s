@@ -29,9 +29,6 @@ public:
     {
         return qmlEngine;
     }
-
-    QVariantMap mergeVariantMaps(const QVariantMap &map1, const QVariantMap &map2);
-
 signals:
 
 public slots:

@@ -5,19 +5,7 @@
 #include <QMap>
 #include <QDebug>
 
-/**************
- * 梅花（Clubs）    C
- * 方块（Diamonds)  D
- * 红心（Hearts）   H
- * 黑桃（Spades）   S
- **************/
-
-//1. 能获取花色(suit
-//2. 能获取牌值(rank
-
-#define SUIT "CDHS"
-#define RANK "23456789TJQKA"
-#define CARD_MAX_NUM 52
+#include "src/rule/Definitions.h"
 
 class Card
 {
@@ -35,19 +23,19 @@ public:
 
     static int getRankValue(QString val) {
         static const QMap<QString, int> map = {
-            {"2", 0 },
-            {"3", 1 },
-            {"4", 2 },
-            {"5", 3 },
-            {"6", 4 },
-            {"7", 5 },
-            {"8", 6 },
-            {"9", 7 },
-            {"T", 8 },
-            {"J", 9 },
-            {"Q", 10},
-            {"K", 11},
-            {"A", 12}
+            {"2", 1 },
+            {"3", 2 },
+            {"4", 3 },
+            {"5", 4 },
+            {"6", 5 },
+            {"7", 6 },
+            {"8", 7 },
+            {"9", 8 },
+            {"T", 9 },
+            {"J", 10},
+            {"Q", 11},
+            {"K", 12},
+            {"A", 13}
         };
         assert(map.contains(val));
         return map.value(val);
@@ -80,6 +68,30 @@ public:
         assert(index >= 0 && index < 52);
         return list[index];
     }
+    static QString getCardImageById(int index) {
+
+        static const QString list[52] = {
+            "qrc:/c120/C2.png", "qrc:/c120/C3.png", "qrc:/c120/C4.png", "qrc:/c120/C5.png", "qrc:/c120/C6.png",
+            "qrc:/c120/C7.png", "qrc:/c120/C8.png", "qrc:/c120/C9.png", "qrc:/c120/CT.png", "qrc:/c120/CJ.png",
+            "qrc:/c120/CQ.png", "qrc:/c120/CK.png", "qrc:/c120/CA.png",
+            "qrc:/c120/D2.png", "qrc:/c120/D3.png", "qrc:/c120/D4.png", "qrc:/c120/D5.png", "qrc:/c120/D6.png",
+            "qrc:/c120/D7.png", "qrc:/c120/D8.png", "qrc:/c120/D9.png", "qrc:/c120/DT.png", "qrc:/c120/DJ.png",
+            "qrc:/c120/DQ.png", "qrc:/c120/DK.png", "qrc:/c120/DA.png",
+            "qrc:/c120/H2.png", "qrc:/c120/H3.png", "qrc:/c120/H4.png", "qrc:/c120/H5.png", "qrc:/c120/H6.png",
+            "qrc:/c120/H7.png", "qrc:/c120/H8.png", "qrc:/c120/H9.png", "qrc:/c120/HT.png", "qrc:/c120/HJ.png",
+            "qrc:/c120/HQ.png", "qrc:/c120/HK.png", "qrc:/c120/HA.png",
+            "qrc:/c120/S2.png", "qrc:/c120/S3.png", "qrc:/c120/S4.png", "qrc:/c120/S5.png", "qrc:/c120/S6.png",
+            "qrc:/c120/S7.png", "qrc:/c120/S8.png", "qrc:/c120/S9.png", "qrc:/c120/ST.png", "qrc:/c120/SJ.png",
+            "qrc:/c120/SQ.png", "qrc:/c120/SK.png", "qrc:/c120/SA.png"
+        };
+//        assert(index >= 0 && index < 52);
+
+        if(index < 0 || index >= 52)
+        {
+            return QString("qrc:/c120/back.png");
+        }
+        return list[index];
+    }
 
     static int getIdByCardString(QString val) {
         static const QMap<QString, int> map = {
@@ -94,31 +106,39 @@ public:
 
 public:
     // 重载小于运算符
-    bool operator<(const Card& other) const {
+    bool operator < (const Card& other) const {
         return rankValue < other.rankValue;
     }
 
     // 重载大于运算符
-    bool operator>(const Card& other) const {
+    bool operator > (const Card& other) const {
         return rankValue > other.rankValue;
     }
 
     // 重载等于运算符
-    bool operator==(const Card& other) const {
+    bool operator == (const Card& other) const {
         return rankValue == other.rankValue;
     }
 
     // 重载小于等于运算符
-    bool operator<=(const Card& other) const {
+    bool operator <= (const Card& other) const {
         return rankValue <= other.rankValue;
     }
 
     // 重载大于等于运算符
-    bool operator>=(const Card& other) const {
+    bool operator >= (const Card& other) const {
         return rankValue >= other.rankValue;
     }
+
+//    bool operator * (const Card& other) const {
+//        return rankValue * other.rankValue;
+//    }
+
+    bool operator * (const int& other) const {
+        return rankValue * other;
+    }
 private:
-    int id;
+    int id;//52
     int rankValue;
     int suitIndex;
 };

@@ -17,12 +17,56 @@ Item {
     property string position: info.position
     property var hand: info.hand
 
-    width: 20
+    width: 45
     height: width
-    Rectangle {
-        width: parent.width
-        height: width
-        radius: width/2
-        color: "red"
+
+//    Text {
+//        anchors.centerIn: iTopCenter
+//        text: player.name
+//    }
+//    Rectangle {
+////            id: rectMain
+//        anchors.centerIn: iCenter
+//        width: 45
+//        height: width
+//        radius: width/2
+//        color: "white"
+//        border.color: "black"
+
+//    }
+
+    Grid {
+        anchors.centerIn: parent
+        columns: 3
+        Item {id: iTopLeft;width: 45;height: 45;}
+        Item {id: iTopCenter;width: 45; height: 45;
+            Text {
+                anchors.centerIn: parent
+                text: player.name
+            }
+        }
+        Item {id: iTopRight; width: 45;height: 45;}
+
+        Item {id: iCenterLeft;width: 45;height: 45;}
+        Item {id: iCenter;width: 45; height: 45;
+            Rectangle {
+        //            id: rectMain
+                anchors.centerIn: parent
+                width: 45
+                height: width
+                radius: width/2
+                color: "white"
+                border.color: "black"
+
+            }
+        }
+        Item {id: iCenterRight;width: 45;height: 45;}
+
+        Item {id: iBottomLeft; width: 45;height: 45}
+        Item {id: iBottomCenter;width: 45;height: 45;}
+        Item {id: iBottomRight;width: 45;height: 45;}
+
+
+
     }
 }

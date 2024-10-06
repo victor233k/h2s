@@ -4,6 +4,7 @@
 #include <QObject>
 
 #include "src/rule/Card.h"
+#include "src/rule/Definitions.h"
 
 struct PlayerInfo {
     QString uuid;
@@ -13,21 +14,37 @@ struct PlayerInfo {
     QString rname;//real name
 
     //Current table
-    int index;
+    int tableIndex;
     int chip;//{4000}
     QVector<int> buyin;//eg: {1,1,2,4}
+    int buyinSum;
 
 
     //Current hand
     QString position;//sb bb utg utg+1 ... co btn
-    QVector<Card*> hand;//TODO:just 2 long
-
+    QVector<Card> handList;
+    QVector<Card> currentBestHand;
     //data
 //    double vpip;//Temporary calculation something // 20% or 20.2
     //....
 
 };
 
+enum PlayerRoles {
+    uuid = Qt::UserRole + 1,
+    tagPlay,
+    tagDescribe,
+    name,
+    rname,
+    tableIndex,
+    chip,
+    buyin,
+    buyinSum,
+    position,
+    hand1,
+    hand2,
+    currentBestHand
+};
 
 class Player : public QObject
 {
